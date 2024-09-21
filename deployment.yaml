@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-project
+  template:
+    metadata:
+      labels:
+        app: flask-project
+    spec:
+      containers:
+      - name: flask-app-container
+        image: vishnu420/flask_project:v2.0.0  # DockerHub image
+        ports:
+        - containerPort: 5000  # Flask app default port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+spec:
+  selector:
+    app: flask-project
+  ports:
+    - protocol: TCP
+      port: 80  # Exposed port
+      targetPort: 5000  # Flask app port
+  type: LoadBalancer
